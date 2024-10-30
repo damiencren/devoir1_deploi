@@ -17,11 +17,13 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      Import-Module Microsoft.PowerShell.Security
       $CloudContent = Get-Content -Path .\devoir1\Cloud-init.txt -Raw
       Write-Host $CloudContent
       $encodedContent = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($CloudContent))
       Write-Host $encodedContent
       Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
+      
 
 - script: |
     echo $(CloudInitContent)
