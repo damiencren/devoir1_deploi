@@ -17,7 +17,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $CloudContent = Get-Content -Path .\AzureResourceGroup12\Cloud-init.txt -Raw
+      $CloudContent = Get-Content -Path .\devoir1\Cloud-init.txt -Raw
       Write-Host $CloudContent
       $encodedContent = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($CloudContent))
       Write-Host $encodedContent
@@ -35,7 +35,7 @@ steps:
     resourceGroupName: 'DACR-RG'
     location: 'East US'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup12\azuredeploy.json'
-    csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup12\azuredeploy.parameters.json'
+    csmFile: '$(Build.SourcesDirectory)\devoir1\azuredeploy.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploy.parameters.json'
     overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
     deploymentMode: 'Incremental'
