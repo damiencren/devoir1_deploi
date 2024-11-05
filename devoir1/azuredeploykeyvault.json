@@ -5,6 +5,9 @@
         "vaults_DACR_KV_V_name": {
             "defaultValue": "DACR-KV-V",
             "type": "String"
+        },
+        "Secret": {
+            "type": "SecureString"
         }
     },
     "variables": {},
