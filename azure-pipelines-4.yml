@@ -52,5 +52,5 @@ steps:
     location: 'East US'
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeuvault.json'
-    csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.parameters.json' # Si nécessaire
+    #csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.parameters.json' # Si nécessaire
     deploymentMode: 'Incremental'
