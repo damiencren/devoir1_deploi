@@ -64,4 +64,3 @@ steps:
     csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploy.parameters.json'
     overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
     deploymentMode: 'Incremental'
-    
