@@ -33,6 +33,9 @@ steps:
     SecretsFilter: '*'
     RunAsPreJob: false
 
+- script: |
+    echo $(AdminPass)
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
