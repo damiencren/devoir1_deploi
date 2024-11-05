@@ -1,73 +1,56 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "name": {
-            "type": "string"
-        },
-        "location": {
-            "type": "string"
-        },
-        "sku": {
-            "type": "string"
-        },
-        "accessPolicies": {
-            "type": "array"
-        },
-        "tenant": {
-            "type": "string"
-        },
-        "enabledForDeployment": {
-            "type": "bool"
-        },
-        "enabledForTemplateDeployment": {
-            "type": "bool"
-        },
-        "enabledForDiskEncryption": {
-            "type": "bool"
-        },
-        "enableRbacAuthorization": {
-            "type": "bool"
-        },
-        "publicNetworkAccess": {
-            "type": "string "
-        },
-        "enableSoftDelete": {
-            "type": "bool"
-        },
-        "softDeleteRetentionInDays": {
-            "type": "int"
-        },
-        "networkAcls": {
-            "type": "object"
+        "vaults_DACR_KV_V_name": {
+            "defaultValue": "DACR-KV-V",
+            "type": "String"
         }
     },
     "variables": {},
     "resources": [
         {
-            "apiVersion": "2023-08-01-preview",
-            "name": "[parameters('name')]",
-            "location": "[parameters('location')]",
             "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2024-04-01-preview",
+            "name": "[parameters('vaults_DACR_KV_V_name')]",
+            "location": "eastus",
             "properties": {
-                "enabledForDeployment": "[parameters('enabledForDeployment')]",
-                "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
-                "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
-                "enableRbacAuthorization": "[parameters('enableRbacAuthorization')]",
-                "accessPolicies": "[parameters('accessPolicies')]",
-                "tenantId": "[parameters('tenant')]",
                 "sku": {
-                    "name": "[parameters('sku')]",
-                    "family": "A"
+                    "family": "A",
+                    "name": "Standard"
                 },
-                "publicNetworkAccess": "[parameters('publicNetworkAccess')]",
-                "enableSoftDelete": "[parameters('enableSoftDelete')]",
-                "softDeleteRetentionInDays": "[parameters('softDeleteRetentionInDays')]",
-                "networkAcls": "[parameters('networkAcls')]"
-            },
-            "tags": {},
-            "dependsOn": []
+                "tenantId": "80f77c9f-1288-4386-8e5c-99696689a9c2",
+                "networkAcls": {
+                    "bypass": "None",
+                    "defaultAction": "Allow",
+                    "ipRules": [],
+                    "virtualNetworkRules": []
+                },
+                "accessPolicies": [],
+                "enabledForDeployment": false,
+                "enabledForDiskEncryption": false,
+                "enabledForTemplateDeployment": false,
+                "enableSoftDelete": true,
+                "softDeleteRetentionInDays": 90,
+                "enableRbacAuthorization": true,
+                "vaultUri": "https://dacr-kv-v.vault.azure.net/",
+                "provisioningState": "Succeeded",
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2024-04-01-preview",
+            "name": "[concat(parameters('vaults_DACR_KV_V_name'), '/AdminPass')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_DACR_KV_V_name'))]"
+            ],
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                }
+            }
         }
-    ],
-    "outputs": {}
+    ]
 }
