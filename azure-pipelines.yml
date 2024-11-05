@@ -17,11 +17,13 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      Import-Module Microsoft.PowerShell.Security
       $CloudContent = Get-Content -Path .\devoir1\Cloud-init.txt -Raw
       Write-Host $CloudContent
       $encodedContent = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($CloudContent))
       Write-Host $encodedContent
       Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
+      
 
 - script: |
     echo $(CloudInitContent)
@@ -38,4 +40,17 @@ steps:
     csmFile: '$(Build.SourcesDirectory)\devoir1\azuredeploy.json'
     csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploy.parameters.json'
     overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
+    deploymentMode: 'Incremental'
+    
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1(1dba5540-2771-4f4f-9434-9f0150a9c88f)'
+    subscriptionId: '1dba5540-2771-4f4f-9434-9f0150a9c88f'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'DACR-RG-KV'
+    location: 'East US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.parameters.json'
     deploymentMode: 'Incremental'
