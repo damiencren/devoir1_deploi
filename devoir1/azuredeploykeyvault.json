@@ -47,6 +47,7 @@
                 "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_DACR_KV_V_name'))]"
             ],
             "properties": {
+                "value": "[parameters('adminPassword')]",
                 "attributes": {
                     "enabled": true
                 }

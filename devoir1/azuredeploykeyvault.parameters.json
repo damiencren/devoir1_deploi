@@ -4,6 +4,9 @@
     "parameters": {
         "vaults_DACR_KV_V_name": {
             "value": null
+        },
+        "adminPassword": {
+            "value": "Damiencren###"
         }
     }
 }
