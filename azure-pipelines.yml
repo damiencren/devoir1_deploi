@@ -13,6 +13,25 @@ variables:
 - name: CloudInitContent
 
 steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1(1dba5540-2771-4f4f-9434-9f0150a9c88f)'
+    subscriptionId: '1dba5540-2771-4f4f-9434-9f0150a9c88f'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'DACR-RG-KV'
+    location: 'East US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.parameters.json'
+    deploymentMode: 'Incremental'
+    
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Azure subscription 1(1dba5540-2771-4f4f-9434-9f0150a9c88f)'
+    KeyVaultName: 'DACR-KV-V'
+    SecretsFilter: '*'
+    RunAsPreJob: false
 
 - task: PowerShell@2
   inputs:
@@ -43,15 +62,3 @@ steps:
     overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
     deploymentMode: 'Incremental'
     
-- task: AzureResourceManagerTemplateDeployment@3
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1(1dba5540-2771-4f4f-9434-9f0150a9c88f)'
-    subscriptionId: '1dba5540-2771-4f4f-9434-9f0150a9c88f'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: 'DACR-RG-KV'
-    location: 'East US'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.json'
-    csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.parameters.json'
-    deploymentMode: 'Incremental'
