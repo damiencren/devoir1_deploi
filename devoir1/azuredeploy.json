@@ -154,7 +154,7 @@
             },
             "zones": []
         },
-        {
+        { 
             "name": "[parameters('loadBalancerName')]",
             "type": "Microsoft.Network/loadBalancers",
             "apiVersion": "2021-05-01",
@@ -302,6 +302,7 @@
         {
             "name": "[parameters('virtualMachineScaleSetName')]",
             "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "zones": ["1", "2", "3"],
             "apiVersion": "[variables('virtualMachineScaleSetApiVersion')]",
             "location": "[parameters('location')]",
             "dependsOn": [
