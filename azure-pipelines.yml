@@ -2,7 +2,7 @@
 trigger:
 - master
 
-# on specifie le pool a utiliser
+# On specifie le pool a utiliser
 pool: "default"
 
 variables:
@@ -10,7 +10,7 @@ variables:
 
 steps:
 
-# deploiement de la keyvault dans un ressource groupe dedié'
+# Déploiement du azure keyvault et ajout d'un secret dans un ressource groupe dedié
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
@@ -24,7 +24,7 @@ steps:
     csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.parameters.json'
     deploymentMode: 'Incremental'
     
-# récuperation du secret dans le keyvault
+# On récupère la valeur du secret dans le keyvault
 - task: AzureKeyVault@2
   inputs:
     azureSubscription: 'Azure subscription 1(1dba5540-2771-4f4f-9434-9f0150a9c88f)'
@@ -44,7 +44,7 @@ steps:
       Write-Host $encodedContent
       Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
       
-# création des machines virtuelles, du load balancers etc..
+# Déploiement du Scale Set
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
