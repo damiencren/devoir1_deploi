@@ -32,13 +32,13 @@ steps:
     SecretsFilter: '*'
     RunAsPreJob: false
 
-# script qui va lire et encoder le contenu de 'Cloud-init.txt'
+# script qui va lire et encoder le contenu de 'Cloud-init.xaml'
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
       Import-Module Microsoft.PowerShell.Security
-      $CloudContent = Get-Content -Path .\devoir1\Cloud-init.txt -Raw
+      $CloudContent = Get-Content -Path .\devoir1\Cloud-init.xaml -Raw
       Write-Host $CloudContent
       $encodedContent = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($CloudContent))
       Write-Host $encodedContent
