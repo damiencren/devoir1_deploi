@@ -9,8 +9,21 @@ variables:
 - name: CloudInitContent
 
 steps:
+# Validation du template chargé de la création du keyvault et de l'ajout du secret
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1(1dba5540-2771-4f4f-9434-9f0150a9c88f)'
+    subscriptionId: '1dba5540-2771-4f4f-9434-9f0150a9c88f'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'DACR-RG-KV'
+    location: 'East US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploykeyvault.parameters.json'
+    deploymentMode: 'Validation'
 
-# Déploiement du azure keyvault et ajout d'un secret dans un ressource groupe dedié
+# Déploiement du azure keyvault et ajout d'un secret dans un ressource groupe dedié en utilisant le template
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
@@ -44,7 +57,26 @@ steps:
       Write-Host $encodedContent
       Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
       
-# Déploiement du Scale Set
+# Affichage du contenu de CloudInit après son encodage 
+- script: |
+    echo $(CloudInitContent)
+
+# Validation du template de création du Scale Set
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1(1dba5540-2771-4f4f-9434-9f0150a9c88f)'
+    subscriptionId: '1dba5540-2771-4f4f-9434-9f0150a9c88f'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'DACR-RG'
+    location: 'East US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)\devoir1\azuredeploy.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\devoir1\azuredeploy.parameters.json'
+    overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
+    deploymentMode: 'Incremental'
+
+# Déploiement du Scale Set en utilisant le template
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
